@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang='es'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>Patitas 🐾 · Tienda de Animales</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--accent:#10b981;--accent2:#38bdf8;--text:#e2e8f0;--muted:#94a3b8}
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,Roboto,sans-serif}
+body{background:var(--bg);color:var(--text);min-height:100vh}
+header{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;padding:16px 32px;background:rgba(15,23,42,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08);z-index:10}
+.logo{font-size:1.4rem;font-weight:800}
+.logo span{color:var(--accent)}
+.cart-btn{background:var(--accent);border:none;color:#04241a;font-weight:700;padding:10px 20px;border-radius:12px;cursor:pointer;transition:all .25s ease}
+.cart-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(16,185,129,.35)}
+.hero{text-align:center;padding:80px 24px;background:radial-gradient(ellipse at top,rgba(16,185,129,.15),transparent 60%)}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;margin-bottom:16px}
+.hero p{color:var(--muted);font-size:1.1rem;max-width:560px;margin:0 auto 32px}
+.cta{background:linear-gradient(135deg,#10b981,#38bdf8);border:none;color:#04241a;font-weight:800;padding:14px 36px;border-radius:14px;font-size:1rem;cursor:pointer;transition:all .25s ease}
+.cta:hover{transform:scale(1.05);box-shadow:0 12px 32px rgba(16,185,129,.4)}
+section{padding:64px 32px;max-width:1200px;margin:0 auto}
+h2{font-size:1.8rem;margin-bottom:32px;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;transition:all .25s ease}
+.card:hover{transform:translateY(-6px);border-color:rgba(16,185,129,.4);box-shadow:0 16px 40px rgba(0,0,0,.4)}
+.card .emoji{font-size:4rem;display:flex;justify-content:center;padding:32px 0;background:linear-gradient(135deg,rgba(56,189,248,.1),rgba(16,185,129,.1))}
+.card .info{padding:20px}
+.card h3{font-size:1.1rem;margin-bottom:6px}
+.card p{color:var(--muted);font-size:.9rem;margin-bottom:12px}
+.price{font-size:1.2rem;font-weight:800;color:var(--accent);margin-bottom:14px;display:block}
+.add{width:100%;background:rgba(16,185,129,.15);color:var(--accent);border:1px solid rgba(16,185,129,.4);padding:10px;border-radius:10px;font-weight:700;cursor:pointer;transition:all .25s ease}
+.add:hover{background:var(--accent);color:#04241a}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--accent);color:#04241a;font-weight:700;padding:12px 24px;border-radius:12px;transition:all .3s ease;opacity:0}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+footer{text-align:center;padding:32px;color:var(--muted);border-top:1px solid rgba(255,255,255,.08)}
+</style>
+</head>
+<body>
+<header>
+<div class='logo'>🐾 Patitas<span>Store</span></div>
+<button class='cart-btn'>🛒 Carrito (<span id='count'>0</span>)</button>
+</header>
+<div class='hero'>
+<h1>Tu mejor amigo,<br>en la mejor tienda</h1>
+<p>Todo lo que tu mascota necesita: alimentos, juguetes, accesorios y mucho amor en cada producto.</p>
+<button class='cta' id='ctaBtn'>Ver productos ↓</button>
+</div>
+<section id='productos'>
+<h2>Productos destacados</h2>
+<div class='grid' id='grid'></div>
+</section>
+<div class='toast' id='toast'>¡Añadido al carrito!</div>
+<footer>Hecho con ❤️ para las mascotas · Patitas Store © 2025</footer>
+<script>
+const products=[
+{name:'Croquetas Premium Perro',desc:'Alimento completo para perros adultos',price:'24,99 €',emoji:'🐕'},
+{name:'Rascador Torre Gato',desc:'Torre de 3 niveles con cueva',price:'39,99 €',emoji:'🐈'},
+{name:'Acuario Tropical 60L',desc:'Con filtro LED incluido',price:'89,99 €',emoji:'🐠'},
+{name:'Pienso Peces Tropical',desc:'Escamas vitaminadas 250g',price:'7,99 €',emoji:'🐟'},
+{name:'Cama Nube Deluxe',desc:'Ultra suave, lavable, 3 tamaños',price:'29,99 €',emoji:'🛏️'},
+{name:'Juguete Cuerda Nudo',desc:'Resistente, ideal para masticar',price:'6,99 €',emoji:'🦴'},
+{name:'Bebedero Automático',desc:'Fuente filtrante silenciosa',price:'19,99 €',emoji:'💧'},
+{name:'Arnés Reflectante',desc:'Ajustable y seguro para paseos',price:'14,99 €',emoji:'🦮'}
+];
+let count=0;
+document.getElementById('grid').innerHTML=products.map(p=>`<div class='card'><div class='emoji'>${p.emoji}</div><div class='info'><h3>${p.name}</h3><p>${p.desc}</p><span class='price'>${p.price}</span><button class='add' onclick='add()'>+ Añadir al carrito</button></div></div>`).join('');
+document.getElementById('ctaBtn').addEventListener('click',()=>{document.getElementById('productos').scrollIntoView({behavior:'smooth'})});
+function add(){count++;document.getElementById('count').textContent=count;showToast('✅ ¡Producto añadido al carrito!')}
+let t;
+function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(t);t=setTimeout(()=>el.classList.remove('show'),2000)}
+</script>
+</body>
+</html>
